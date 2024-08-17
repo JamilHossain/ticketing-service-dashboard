@@ -1,18 +1,14 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 
-export type SubscriptionType = {
-    id: string
-    name: string
-    bandwidth: string
-    price: number
+export type TicketsType = {
+    Ticket: string
+    Rating: string
+    updateAt: string;
 }
 
-export const columns: ColumnDef<SubscriptionType>[] = [
+export const columns: ColumnDef<TicketsType>[] = [
     {
         accessorKey: "Ticket",
         header: "Ticket",
@@ -21,4 +17,8 @@ export const columns: ColumnDef<SubscriptionType>[] = [
         accessorKey: "Rating",
         header: "Rating",
     },
+    {
+        accessorKey:"updatedAt",
+        header:"Date"
+    }
 ]

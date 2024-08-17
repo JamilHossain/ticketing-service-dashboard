@@ -11,7 +11,7 @@ const Page = async () => {
       </div>
     )
   }
-  console.log("user",user)
+  
   return (
     <div className="mt-32">
       <div className="flex flex-col mx-auto px-24">

@@ -6,7 +6,7 @@ interface UseGetTickets {
 
 export const useGetTickets = ({token}:{token:string}) => {
     const query = useQuery({
-        queryKey: ["subscription_plan"],
+        queryKey: ["get_tickets"],
         queryFn: async () => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/ticket`,{
                 method: "GET",
@@ -19,7 +19,7 @@ export const useGetTickets = ({token}:{token:string}) => {
                 throw new Error("Failed to fetch images");
             }
             const  data  = await res.json();
-            console.log("tickets",data)
+
             return data;
         },
     })

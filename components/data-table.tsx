@@ -15,6 +15,11 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
+import { addDays, format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
+import { GrPowerReset } from "react-icons/gr";
+import { useRouter } from "next/navigation"
 
 import {
     Table,
@@ -32,25 +37,33 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
-type MyDataType = {
-    id: number;
-    name: string;
-    bandwidth: string;
-    price: number;
-};
+interface DateProps {
+    from: Date;
+    to: Date;
+}
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     filterKey: string
-
+    filterByDate: (date: DateProps) => Promise<TData[]>
+    setDataByFilter: (data: TData[] | null) => void
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
-    filterKey
+    filterKey,
+    filterByDate,
+    setDataByFilter
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -59,6 +72,11 @@ export function DataTable<TData, TValue>({
 
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const router = useRouter()
+    const [date, setDate] = React.useState<DateRange | undefined>({
+        from: new Date(),
+        to: addDays(new Date(), 5),
+    })
 
     const table = useReactTable({
         data,
@@ -82,14 +100,62 @@ export function DataTable<TData, TValue>({
     return (
         <div>
             <div className="flex justify-between items-center py-4">
-                <Input
+                {/* <Input
                     placeholder={`Filter ${filterKey}...`}
                     value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
                         table.getColumn(filterKey)?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
-                />
+                /> */}
+                <div className="flex gap-2">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                id="date"
+                                variant={"outline"}
+                                className={cn(
+                                    "w-[300px] justify-start text-left font-normal",
+                                    !date && "text-muted-foreground"
+                                )}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {date?.from ? (
+                                    date.to ? (
+                                        <>
+                                            {format(date.from, "LLL dd, y")} -{" "}
+                                            {format(date.to, "LLL dd, y")}
+                                        </>
+                                    ) : (
+                                        format(date.from, "LLL dd, y")
+                                    )
+                                ) : (
+                                    <span>Pick a date</span>
+                                )}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={date?.from}
+                                selected={date}
+                                onSelect={(newDate) => {
+                                    setDate(newDate);
+                                    if (newDate?.from && newDate?.to) {
+                                        filterByDate({ from: newDate.from, to: newDate.to });
+                                    }
+                                }}
+                                numberOfMonths={2}
+                            />
+                        </PopoverContent>
+                    </Popover>
+                    <Button variant={"outline"} onClick={() => setDataByFilter(null)}>
+                        <GrPowerReset className="w-8 h-8" />
+                    </Button>
+
+                </div>
+
 
                 <div className="flex gap-2">
                     <DropdownMenu>
