@@ -8,7 +8,7 @@ interface UseGetTickets {
 export const useGetTickets = ({token}:{token:string}) => {
     const query = useQuery({
         queryKey: ["get_tickets"],
-        queryFn: ()=>getAllTickets({token})
+        queryFn: async()=> await getAllTickets({token})
     })
     return query;
 }

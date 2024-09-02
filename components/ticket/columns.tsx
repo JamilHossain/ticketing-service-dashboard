@@ -3,9 +3,10 @@
 import { ColumnDef } from "@tanstack/react-table"
 
 export type TicketsType = {
-    Ticket: string
-    Rating: string
-    updateAt: string;
+    Ticket    : string
+    Rating    : string
+    createdAt ?: string
+    updatedAt ?: string;
 }
 
 export const columns: ColumnDef<TicketsType>[] = [

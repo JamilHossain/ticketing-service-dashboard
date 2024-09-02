@@ -11,12 +11,14 @@ import { columns } from '@/components/ticket/columns'
 import Loader from '@/components/loader';
 
 import { TicketsType } from "@/components/ticket/columns";
+import dateFormat from "@/lib/date-format";
+import { getTicketsByDate } from "@/actions/get-tickets-by-date";
 
 interface TicketListProps {
     token: string;
 }
 
-interface DateProps {
+export interface DateProps {
     from: Date;
     to: Date;
 }
@@ -31,16 +33,10 @@ const TicketList: React.FC<TicketListProps> = ({
     const [dataByFilter, setDataByFilter] = useState<FilteredData>(null);
 
     const filterByDate = async (date: DateProps) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/ticket/filter?from=${date.from.toISOString()}&to=${date.to.toISOString()}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            },
-        })
+        console.log("date : ",date)
+        const dataFromFilter = await getTicketsByDate({ date, token })
 
-        const dataFromFilter = await res.json();
-
-        setDataByFilter(dataFromFilter)
+        setDataByFilter(dateFormat(dataFromFilter))
         return dataFromFilter;
     }
 
@@ -49,6 +45,8 @@ const TicketList: React.FC<TicketListProps> = ({
             <Loader />
         )
     }
+
+    const tickets = dateFormat(data)
 
     return (
         <div className='flex flex-col gap-3'>
@@ -64,7 +62,7 @@ const TicketList: React.FC<TicketListProps> = ({
                 filterByDate={filterByDate}
                 setDataByFilter={setDataByFilter}
                 columns={columns}
-                data={dataByFilter || data}
+                data={dataByFilter || tickets}
             />
         </div>
     )
