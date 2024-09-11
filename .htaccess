@@ -7,9 +7,15 @@ RewriteRule ^(.*)$ http://localhost:3008/$1 [P,L]
 
 # Reverse proxy to http://localhost:3007 for /backend path
 RewriteCond %{REQUEST_URI} ^/backend
-RewriteRule ^/backend(.*)$ http://localhost:3007/$1 [P,L]
+RewriteRule ^backend/(.*)$ http://localhost:3007/$1 [P,L]
 
-# Allow proxying requests
-RewriteCond %{HTTP:X-Forwarded-Proto} https
-RequestHeader set X-Forwarded-Proto "https"
-RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
+# Set headers for proxying
+<IfModule mod_headers.c>
+    RequestHeader set X-Forwarded-Proto "https" env=HTTPS
+    RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
+</IfModule>
+
+# Handle Next.js static files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(_next/static/.*) http://localhost:3008/$1 [P,L]
