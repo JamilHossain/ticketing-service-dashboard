@@ -1,8 +1,9 @@
 # Enable mod_rewrite
 RewriteEngine On
 
-# Redirect requests for index.php to the root
-RewriteRule ^index\.php$ / [R=301,L]
+# Handle requests for static files
+RewriteCond %{REQUEST_URI} ^/_next/static/
+RewriteRule ^(_next/static/.*)$ http://localhost:3008/$1 [P,L]
 
 # Reverse proxy to http://localhost:3008 for the main domain
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -19,13 +20,8 @@ RewriteRule ^backend/(.*)$ http://localhost:3007/$1 [P,L]
     RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
 </IfModule>
 
-# Handle Next.js static files
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(_next/static/.*) http://localhost:3008/$1 [P,L]
-
 # Disable directory listing
 Options -Indexes
 
-# Set the default handler
-DirectoryIndex /
+# Ensure all routes are directed to Next.js
+FallbackResource /
