@@ -10,27 +10,28 @@ const nextConfig = {
     },
     async rewrites() {
         return [
-            {
-                source: '/backend/:path*',
-                destination: 'http://localhost:3007/:path*',
-            },
+          {
+            source: '/backend/:path*',
+            destination: 'http://localhost:3007/:path*',
+          },
         ];
-    },
-    async headers() {
+      },
+      async headers() {
         return [
-            {
-                source: '/(.*)',
-                headers: [
-                    {
-                        key: 'X-Forwarded-Proto',
-                        value: 'https',
-                    },
-                ],
-            },
+          {
+            source: '/(.*)',
+            headers: [
+              {
+                key: 'X-Forwarded-Proto',
+                value: 'https',
+              },
+            ],
+          },
         ];
-    },
-    output: 'standalone',
-    trailingSlash: true,
+      },
+      output: 'standalone',
+      poweredByHeader: false,
+      reactStrictMode: true,
 };
 
 export default nextConfig;
