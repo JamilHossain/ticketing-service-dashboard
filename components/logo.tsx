@@ -13,7 +13,7 @@ const Logo:React.FC<LogoProps> = ({
             alt={"ASD"}
             width={50}
             height={50}
-            className="object-fill ml-[-25px] w-[180px] h-[50px]"
+            className="ml-[-25px] w-[180px] h-[50px]"
         />
     )
 }
