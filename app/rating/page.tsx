@@ -5,7 +5,9 @@ const Page = async ({
 }: {
     searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-    const { Ticket, Rating } = searchParams;
+    const { Ticket, Rating, TicketUrl } = searchParams;
+
+    console.log(searchParams)
 
     if (!Ticket || !Rating) {
         return (
@@ -13,7 +15,7 @@ const Page = async ({
         )
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/ticket/rating?Ticket=${Ticket}&Rating=${Rating}`)
+    const response = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/ticket/rating?Ticket=${Ticket}&Rating=${Rating}&TicketUrl=${TicketUrl}`)
 
     const data = await response.json()
 
