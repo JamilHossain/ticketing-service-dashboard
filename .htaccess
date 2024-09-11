@@ -4,8 +4,11 @@ RewriteEngine On
 # Handle the request to avoid loading index.php
 DirectoryIndex disabled
 
-# Disable directory listing
-Options -Indexes
+# Disable directory listing and handle other Options
+Options -Indexes FollowSymLinks
+
+# Ensure access permissions are not denied by default
+Require all granted
 
 # Reverse proxy to http://localhost:3008 for the main domain
 RewriteCond %{REQUEST_URI} !^/backend
