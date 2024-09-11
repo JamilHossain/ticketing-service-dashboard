@@ -7,7 +7,7 @@ const Page = async ({
 }) => {
     const { Ticket, Rating, TicketUrl } = searchParams;
 
-    console.log(searchParams)
+    console.log(TicketUrl)
 
     if (!Ticket || !Rating) {
         return (
