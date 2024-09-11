@@ -8,6 +8,15 @@ const nextConfig = {
             ],
         },
     },
+    async rewrites() {
+        return [
+            {
+                source: '/index.php',
+                destination: '/',
+            },
+        ]
+    },
+
 };
 
 export default nextConfig;
