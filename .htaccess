@@ -1,30 +1,24 @@
 # Enable mod_rewrite
 RewriteEngine On
 
-# Redirect requests for index.php to the root
-RewriteRule ^index\.php$ / [R=301,L]
+# Redirect all requests to the Next.js application
+RewriteCond %{REQUEST_URI} !^/_next/
+RewriteCond %{REQUEST_URI} !^/static/
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteRule ^(.*)$ http://localhost:3008/$1 [P,L]
 
-# Handle requests for static files
-RewriteCond %{REQUEST_URI} ^/_next/static/
-RewriteRule ^(_next/static/.*)$ http://localhost:3008/$1 [P,L]
+# Handle Next.js static files and API routes
+RewriteRule ^(_next|static|api)/(.*)$ http://localhost:3008/$1/$2 [P,L]
 
 # Reverse proxy to http://localhost:3008 for the main domain
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/backend
 RewriteRule ^(.*)$ http://localhost:3008/$1 [P,L]
 
 # Reverse proxy to http://localhost:3007 for /backend path
 RewriteCond %{REQUEST_URI} ^/backend
-RewriteRule ^backend/(.*)$ http://localhost:3007/$1 [P,L]
+RewriteRule ^/backend(.*)$ http://localhost:3007/$1 [P,L]
 
-# Set headers for proxying
-<IfModule mod_headers.c>
-    RequestHeader set X-Forwarded-Proto "https" env=HTTPS
-    RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
-</IfModule>
-
-# Disable directory listing
-Options -Indexes
-
-# Ensure all routes are directed to Next.js
-FallbackResource /
+# Allow proxying requests
+RewriteCond %{HTTP:X-Forwarded-Proto} https
+RequestHeader set X-Forwarded-Proto "https"
+RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
