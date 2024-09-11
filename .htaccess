@@ -1,9 +1,6 @@
 # Enable mod_rewrite
 RewriteEngine On
 
-# Prevent Apache from looking for index.php or any default files
-DirectoryIndex disabled
-
 # Reverse proxy to http://localhost:3008 for the main domain
 RewriteCond %{REQUEST_URI} !^/backend
 RewriteRule ^(.*)$ http://localhost:3008/$1 [P,L]
@@ -12,10 +9,7 @@ RewriteRule ^(.*)$ http://localhost:3008/$1 [P,L]
 RewriteCond %{REQUEST_URI} ^/backend
 RewriteRule ^/backend(.*)$ http://localhost:3007/$1 [P,L]
 
-# Allow proxying requests and preserve original headers
+# Allow proxying requests
+RewriteCond %{HTTP:X-Forwarded-Proto} https
 RequestHeader set X-Forwarded-Proto "https"
 RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
-
-# Additional settings to ensure Proxy is enabled
-ProxyPreserveHost On
-ProxyRequests Off
