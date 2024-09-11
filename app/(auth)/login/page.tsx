@@ -55,7 +55,7 @@ const Page = () => {
                     if (data?.error) {
                         return `Login failed: ${data?.error}`
                     } else {
-                        return `Login successful: ${data?.success}`
+                        return `Login successful...`
                     }
                 }
             })
@@ -63,84 +63,66 @@ const Page = () => {
     }
 
     return (
-        <div className="flex justify-center items-center w-full h-full">
-            <Card>
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl">Login to your account</CardTitle>
-                    <CardDescription>
-                        Enter your email & password below to login
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4">
-                    <Form {...form}>
-                        <div className="grid grid-cols-2 gap-6">
-                            <Button variant="outline">
-                                <Icons.gitHub className="mr-2 h-4 w-4" />
-                                Github
-                            </Button>
-                            <Button variant="outline">
-                                <Icons.google className="mr-2 h-4 w-4" />
-                                Google
-                            </Button>
-                        </div>
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-background px-2 text-muted-foreground">
-                                    Or continue with
-                                </span>
-                            </div>
-                        </div>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem className="grid gap-2">
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                disabled={isPending}
-                                                type="email"
-                                                placeholder="email"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem className="grid gap-2">
-                                        <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                disabled={isPending}
-                                                type="password"
-                                                placeholder="password"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button
-                                disabled={isPending}
-                                type="submit"
-                                className="w-full"
-                            >
-                                Submit
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
+        <div className="h-full w-full">
+            <div className="flex justify-center items-center">
+                <Card>
+                    <CardHeader className="space-y-1">
+                        <CardTitle className="text-2xl">Login to your account</CardTitle>
+                        <CardDescription>
+                            Enter your email & password below to login
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-4">
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 h-full">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem className="grid gap-2">
+                                            <FormLabel>Email</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    disabled={isPending}
+                                                    type="email"
+                                                    placeholder="email"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem className="grid gap-2">
+                                            <FormLabel>Password</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    disabled={isPending}
+                                                    type="password"
+                                                    placeholder="password"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button
+                                    disabled={isPending}
+                                    type="submit"
+                                    className="w-full"
+                                >
+                                    Submit
+                                </Button>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     )
 }

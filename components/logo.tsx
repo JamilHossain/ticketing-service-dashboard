@@ -10,10 +10,10 @@ const Logo:React.FC<LogoProps> = ({
     return (
         <Image
             src={src}
-            alt={"photo optima"}
+            alt={"ASD"}
             width={50}
             height={50}
-            className="object-cover ml-[-25px] w-[180px] h-[50px]"
+            className="object-fill ml-[-25px] w-[180px] h-[50px]"
         />
     )
 }
