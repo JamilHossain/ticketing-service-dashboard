@@ -1,8 +1,13 @@
 # Enable mod_rewrite
 RewriteEngine On
 
+# Handle the request to avoid loading index.php
+DirectoryIndex disabled
+
 # Reverse proxy to http://localhost:3008 for the main domain
 RewriteCond %{REQUEST_URI} !^/backend
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ http://localhost:3008/$1 [P,L]
 
 # Reverse proxy to http://localhost:3007 for /backend path
