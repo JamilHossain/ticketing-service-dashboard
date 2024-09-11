@@ -8,6 +8,28 @@ const nextConfig = {
             ],
         },
     },
+    async rewrites() {
+        return [
+          {
+            source: '/backend/:path*',
+            destination: 'http://localhost:3007/:path*',
+          },
+        ];
+      },
+      async headers() {
+        return [
+          {
+            source: '/(.*)',
+            headers: [
+              {
+                key: 'X-Forwarded-Proto',
+                value: 'https',
+              },
+            ],
+          },
+        ];
+      },
+      output: 'standalone',
 };
 
 export default nextConfig;
