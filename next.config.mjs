@@ -8,30 +8,15 @@ const nextConfig = {
             ],
         },
     },
-    async rewrites() {
-        return [
-          {
-            source: '/backend/:path*',
-            destination: 'http://localhost:3007/:path*',
-          },
-        ];
-      },
-      async headers() {
-        return [
-          {
-            source: '/(.*)',
-            headers: [
-              {
-                key: 'X-Forwarded-Proto',
-                value: 'https',
-              },
-            ],
-          },
-        ];
-      },
-      output: 'standalone',
-      poweredByHeader: false,
-      reactStrictMode: true,
+    trailingSlash: true,
+    exportPathMap: async function (
+        defaultPathMap,
+        { dev, dir, outDir, distDir, buildId }
+    ) {
+        return {
+            "/": { page: "/" },
+        };
+    },
 };
 
 export default nextConfig;
