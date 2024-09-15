@@ -1,10 +1,12 @@
-import { QueryProvider } from "@/providers/query-provider";
-import { SessionProvider } from "next-auth/react";
-import { auth } from "@/auth";
-
-import { Toaster } from "@/components/ui/sonner"
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
+
+import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/sonner"
+import SheetProvider from "@/providers/sheet-provider";
+import { QueryProvider } from "@/providers/query-provider";
+
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,7 +27,7 @@ export default async function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <QueryProvider>
-
+            <SheetProvider />
             {children}
 
           </QueryProvider>

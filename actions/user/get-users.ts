@@ -1,7 +1,7 @@
 "use server";
 
-export const getAllTickets = async ({ token }: { token: string }) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/ticket`, {
+export const getAllUsers = async ({ token }: { token: string }) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/user`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -9,7 +9,7 @@ export const getAllTickets = async ({ token }: { token: string }) => {
     },
   });
   if (!res.ok) {
-    throw new Error("Failed to fetch ticket");
+    throw new Error("Failed to fetch user");
   }
   const data = await res.json();
 

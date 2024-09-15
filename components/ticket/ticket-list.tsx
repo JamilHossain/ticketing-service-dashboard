@@ -33,7 +33,6 @@ const TicketList: React.FC<TicketListProps> = ({
     const [dataByFilter, setDataByFilter] = useState<FilteredData>(null);
 
     const filterByDate = async (date: DateProps) => {
-        console.log("date : ",date)
         const dataFromFilter = await getTicketsByDate({ date, token })
 
         setDataByFilter(dateFormat(dataFromFilter))
@@ -58,10 +57,11 @@ const TicketList: React.FC<TicketListProps> = ({
             </div>
             <Separator />
             <DataTable
-                filterKey='name'
+                filterKey="rating"
                 filterByDate={filterByDate}
                 setDataByFilter={setDataByFilter}
                 columns={columns}
+                status={false}
                 data={dataByFilter || tickets}
             />
         </div>

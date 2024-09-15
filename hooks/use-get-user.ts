@@ -1,29 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 
-interface UseGetPlanProps {
+interface UseGetUserProps {
     id?: string;
     token?: string;
 }
 
-export const useGetPlan = ({ id, token }: UseGetPlanProps) => {
+export const useGetUser = ({ id, token }: UseGetUserProps) => {
     const query = useQuery({
         enabled: !!id,
-        queryKey: ["single-plan", { id }],
+        queryKey: ["single-user", { id }],
         queryFn: async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/subscription-plan/${id}`,{
+            const response = await fetch(`${process.env.NEXT_PUBLIC_MQSERVER}/user/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `${token}`
+                    'Authorization': `Bearer ${token}`
                 },
             })
-            const data = await response.json();
+            
+            const data  = await response.json();
 
-            if (data.error) {
+            if (!data) {
                 throw new Error("Failed to fetch plan")
             }
 
-            return data.data;
+            return data;
         }
     })
 

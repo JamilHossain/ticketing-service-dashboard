@@ -50,19 +50,31 @@ interface DateProps {
     to: Date;
 }
 
+type MyDataType = {
+    id: number;
+    email: string;
+    password: string;
+}
+
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     filterKey: string
-    filterByDate: (date: DateProps) => Promise<TData[]>
-    setDataByFilter: (data: TData[] | null) => void
+    onDelete?: (rows: number[]) => void
+    status?: boolean
+    filterByDate?: (date: DateProps) => Promise<TData[]>
+    setDataByFilter?: (data: TData[] | null) => void
+    disabled?: boolean
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    onDelete,
     filterKey,
+    status,
     filterByDate,
+    disabled,
     setDataByFilter
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -100,64 +112,101 @@ export function DataTable<TData, TValue>({
     return (
         <div>
             <div className="flex justify-between items-center py-4">
-                {/* <Input
-                    placeholder={`Filter ${filterKey}...`}
-                    value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn(filterKey)?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                /> */}
-                <div className="flex gap-2">
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                id="date"
-                                variant={"outline"}
-                                className={cn(
-                                    "w-[300px] justify-start text-left font-normal",
-                                    !date && "text-muted-foreground"
-                                )}
-                            >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date?.from ? (
-                                    date.to ? (
-                                        <>
-                                            {format(date.from, "LLL dd, y")} -{" "}
-                                            {format(date.to, "LLL dd, y")}
-                                        </>
-                                    ) : (
-                                        format(date.from, "LLL dd, y")
-                                    )
-                                ) : (
-                                    <span>Pick a date</span>
-                                )}
+                {
+                    status === true && (
+                        <Input
+                            placeholder={`Filter ${filterKey}...`}
+                            value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
+                            onChange={(event) =>
+                                table.getColumn(filterKey)?.setFilterValue(event.target.value)
+                            }
+                            className={`${status === true ? 'inline' : 'hidden'} max-w-sm`}
+                        />
+                    )
+                }
+
+                {
+                    status === false && (
+                        <div className={`flex gap-2`}>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        id="date"
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-[300px] justify-start text-left font-normal",
+                                            !date && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {date?.from ? (
+                                            date.to ? (
+                                                <>
+                                                    {format(date.from, "LLL dd, y")} -{" "}
+                                                    {format(date.to, "LLL dd, y")}
+                                                </>
+                                            ) : (
+                                                format(date.from, "LLL dd, y")
+                                            )
+                                        ) : (
+                                            <span>Pick a date</span>
+                                        )}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        initialFocus
+                                        mode="range"
+                                        defaultMonth={date?.from}
+                                        selected={date}
+                                        onSelect={(newDate) => {
+                                            setDate(newDate);
+                                            if (newDate?.from && newDate?.to && filterByDate) {
+                                                filterByDate({ from: newDate.from, to: newDate.to });
+                                            }
+                                        }}
+                                        numberOfMonths={2}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            <Button variant={"outline"} onClick={() => {
+                                if (setDataByFilter) {
+                                    setDataByFilter(null);
+                                }
+                            }}>
+                                <GrPowerReset className="w-8 h-8" />
                             </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                                initialFocus
-                                mode="range"
-                                defaultMonth={date?.from}
-                                selected={date}
-                                onSelect={(newDate) => {
-                                    setDate(newDate);
-                                    if (newDate?.from && newDate?.to) {
-                                        filterByDate({ from: newDate.from, to: newDate.to });
-                                    }
-                                }}
-                                numberOfMonths={2}
-                            />
-                        </PopoverContent>
-                    </Popover>
-                    <Button variant={"outline"} onClick={() => setDataByFilter(null)}>
-                        <GrPowerReset className="w-8 h-8" />
-                    </Button>
-
-                </div>
-
+                        </div>
+                    )
+                }
 
                 <div className="flex gap-2">
+                    {
+                        table.getFilteredSelectedRowModel().rows.length > 0 && (
+                            <Button
+                                disabled={disabled}
+                                variant={'destructive'}
+                                onClick={() => {
+                                    // onDelete(table
+                                    //     .getFilteredSelectedRowModel()
+                                    //     .rows)
+                                    const selectedRows = table
+                                        .getFilteredSelectedRowModel()
+                                        .rows;
+
+                                    // Cast rows to your specific type
+                                    const selectedData: MyDataType[] = selectedRows.map(row => row.original as MyDataType);
+                                    if (onDelete) {
+                                        onDelete(selectedData.map(row => row.id));
+                                    }
+
+                                    table.resetRowSelection();
+                                }}
+                            >
+                                Delete ({table.getFilteredSelectedRowModel().rows.length})
+                            </Button>
+                        )
+                    }
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="ml-auto">

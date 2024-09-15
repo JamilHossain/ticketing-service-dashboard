@@ -19,6 +19,18 @@ const Navbar = () => {
                 <Link href={"/"}>
                     <Logo src="/asd.jpeg" />
                 </Link>
+                <div className="flex justify-between gap-4">
+                    <Link href={"/dashboard"}>
+                        <Button className={`${pathName === "/dashboard" ? 'border-blue-400' : ''}`} variant={"outline"}>
+                            Tickets
+                        </Button>
+                    </Link>
+                    <Link href={"/user"}>
+                        <Button className={`${pathName === "/user" ? 'border-blue-400' : ''}`} variant={"outline"}>
+                            Users
+                        </Button>
+                    </Link>
+                </div>
                 <div className="flex justify-between gap-2">
                     <LogoutButton>
                         <IoIosLogOut className="dark:bg-[#0f0f0f] w-8 h-8 cursor-pointer" />
